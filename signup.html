@@ -4,21 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyStore - SignUp API</title>
+<!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    fullname(required)
-    email(required)
-    phone-number
-    address
-    gender
-    password(required)
+    <div class="body-bg-img"></div>
+    <div class="form-wrapper">
+        <h3>Go back <a href="index.html" class="link">home</a></h3>
 
-    store password using salt to hash
-    enable CORS
-    API should respond with an error if the required fields are not specified
+        <div class="form-container">
+        <div class="title-container">
+            <h2><b>Sign Up</b></h2>
+            <p>Please fill in the form to create an account</p> <br>
+            <span id="empty-form" class="input-error"> </span>
+          </div>
 
-    on successful creation of the account information created by the user should be displayed except the password
+<form action="#" id="signup-form">
+    <div class="row clearfix">
+        <div class="col-12">
+            <label>Full name</label>
+            <div class="input-field"> 
+                <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                <input type="text" name="fullName" class="" id="full-name" placeholder="Full Name" onkeyup="validateAlphabet('full-name', 'full-name-error')">
+            </div>   
+            <span id="full-name-error" class="input-error"> </span>
+        </div>
+    </div>
 
-    along with the generated authentication token
+    <div class="row clearfix">
+        <div class="col-12">
+        <label>Email</label>
+        <div class="input-field"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
+            <input type="email" name="email" id="email" placeholder="Email" onkeyup="validateEmail('email', 'email-error')">
+        </div> 
+        <span id="email-error" class="input-error"> </span>   
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-6">
+        <label>Phone</label>
+        <div class="input-field"> <span><i aria-hidden="true" class="fa fa-phone"></i></span>
+            <input type="text" name="phoneNumber" id="phone" placeholder="Phone">
+        </div> 
+        <span id="phone-error" class="input-error"> </span>   
+        </div>
+
+        <div class="col-6">
+            <label>Gender</label>
+            <div class="input-field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                <select name="gender" id="gender">
+                    <option value="" selected>Choose</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div> 
+            <span id="gender-error" class="input-error"> </span>   
+        </div>
+    </div>
+
+            <div class="row clearfix">
+                <div class="col-12">
+                <label>Address</label>
+                <div class="input-field"> <span><i aria-hidden="true" class="fa fa-location-arrow"></i></span>
+                    <input type="text" name="address" id="address" placeholder="Address">
+                </div> 
+                <span id="address-error" class="input-error"> </span>   
+                </div>
+            </div>
+
+
+            <div class="row clearfix">
+                <div class="col-12">
+                    <label>Password</label>
+                    <div class="input-field"> <span><i aria-hidden="true" class="fa fa-user-secret"></i></span>
+                    <input type="password" name="pword" id="pword" placeholder="Password" onkeyup="chkPasswordLength('pword', 'password-error')">
+                    </div>
+                    <span id="password-error"  class="input-error"> </span>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-12">
+                    <label>Confirm Password</label>
+                    <div class="input-field"> <span><i aria-hidden="true" class="fa fa-user-secret"></i></span>
+                    <input type="password" name="cword" id="cword" placeholder="Confirm Password" onkeyup="chkPasswordMatch('cword', 'cpassword-error')">
+                    </div>
+                    <span id="cpassword-error"  class="input-error"> </span>
+                </div>
+            </div>
+
+            <input type="hidden" id="validate-counter" value="0">
+
+            <div class="row clearfix">
+                <div class="col-6">
+                   <img id="loader" style="display: none;" class="loader" src="ajax-loader.gif" alt="loading" width="20px" height="20px" >
+                    <input type="submit" value="Sign Up" id="sign-up">
+                </div>
+            </div>
+    </form>        
+
+    <div class="form-footer">
+        <div class="text-center">
+            <h4>Already have an account? <span class="underline"><a href="login.html">Login here</a></span></h4>
+        </div>
+    </div>
+
+    </div>
+</div>
+
 </body>
+<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
+<script src="main.js"></script>
 </html>

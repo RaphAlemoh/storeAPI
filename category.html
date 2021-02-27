@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore - Suggest API</title>
+<!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="body-bg-img"></div>
+    <div class="form-wrapper">
+        <img id="loader" style="display: none;" class="loader" src="ajax-loader.gif" alt="loading" width="20px" height="20px" >
+        <h3>Go back <a href="index.html" class="link">home</a></h3>
+
+        <div class="form-container">
+        <div class="title-container">
+            <h2><b>View Items by Category</b></h2>
+            <p>Please pick one of the category to items under it</p>
+            <span id="item-success" style="color: gren; font-size: 20px;"> </span>
+          </div>
+
+    <form action="#"  id="suggest-form">
+            <div class="row clearfix">
+                <div class="col-12">
+                <label>Item Category</label>
+                <div class="input-field"> <span><i aria-hidden="true" class="fa fa-list"></i></span></div> 
+                    <select name="itemCategory" id="item-category" onchange="viewCategory(this.value)">
+                        <option value="" selected>Choose</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="grocery">Grocery</option>
+                        <option value="furniture">Furniture</option>
+                    </select>
+                    <span id="item-category-error" class="input-error"> </span>   
+                </div>
+            </div>
+    </form>        
+
+    <div class="form-footer">
+        <div class="container">
+            <h1 style="text-align: center;">Categories Items</h1>
+            <img id="loader" style="display: none;" class="loader" src="ajax-loader.gif" alt="loading" width="20px" height="20px" >
+            <ul class="unordered-list" id="categoryy-items">
+            </ul>
+        </div>
+    </div>
+
+    </div>
+</div>
+</body>
+<script>
+    const authUser = JSON.parse((localStorage.getItem("currentLoggedIn")));
+    if(!authUser){
+        window.location = `index.html?message=Access not allowed!`;
+    }
+    const viewCategory = (category) => {
+        if(category != ''){
+                const fetchOptions = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type" : "application/json",
+                        Accept:"application/json",
+                        "Access-Control-Allow-Headers" : "Content-Type",
+                        "Access-Control-Allow-Origin" : "https://jsminnastore.herokuapp.com/suggested",
+                        "Access-Control-Allow-Methods" : "OPTIONS, GET",
+                        Authorization: `access-token ${authUser.token}`
+                    }
+                };
+                document.getElementById('loader').style.display = "block";
+                fetch(`https://jsminnastore.herokuapp.com/suggested/{:${category}}`, fetchOptions)
+                .then(resp => resp.json())
+                .then(data => {
+                    renderCategoryItems(data);
+                    })
+                .catch( err => {
+                document.getElementById('loader').style.display = "none";
+                    console.log(err);
+                });
+
+
+            const renderCategoryItems = (data) => {
+            const categoryItems = data.payload.result;
+            for(const categoryItem of categoryItems){
+                    const categoryUI = document.querySelector('#category-items');
+                    const categoryLi = document.createElement('li');
+                    const br = document.createElement('br');
+                    const hr = document.createElement('hr');
+                    categoryLi.dataset.id = categoryItem.id;
+                    categoryLi.innerHTML =
+                    `<div class="card"> 
+                        <div class="container">
+                        <h4><b>Item Name </b><br> ${categoryItem['itemName']} </h4>
+                        <span><b>Item Description </b><br> ${categoryItem['itemDescription']}</span>
+                        <p> 
+                            Item Category : ${categoryItem['itemCategory']} 
+                            Reason : ${categoryItem['reason']}                      
+                        </p>
+                        </div>
+                    </div>`;
+                    document.getElementById('loader').style.display = "none";
+                    categoryUI.append(categoryLi);
+                }
+            }
+
+        }
+    }
+
+</script>
+</html>

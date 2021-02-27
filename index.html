@@ -4,10 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyStore - Home</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <div class="app">
+    <div class="body-bg-img"></div>
+    <div class="form-wrapper">
+        <div class="text-center">
+            
+            <h2>Welcome to StoreAPI</h2>
+            <h3 id="auth-success"></h3>
+            <br>
+            <div id="unauth-user" style="display: none;">
+           <h5> Don't Have and account yet? Please sign up <a href="signup.html" class="link">here</a> </h5>
 
-    </div>    
+           <br>
+            <h5>Or Login <a href="login.html" class="link">here</a> to continue</h5>
+            </div>
+            <br>
+            <div id="auth-user-links" style="display: none;">
+                <p>
+                    <a href="suggest.html" class="link" >Suggest an item</a> <br><br>
+                    <a href="suggestions.html" class="link" >View Suggested Items</a>   <br><br>               
+                    <a href="category.html" class="link" >View an item in a category</a>  <br><br>                   
+                    <a href="#" class="link" onclick="logout()" >Logout</a>                    
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>

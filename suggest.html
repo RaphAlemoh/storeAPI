@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore - Suggest API</title>
+<!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div class="body-bg-img"></div>
+    <div class="form-wrapper">
+        <h3>Go back <a href="index.html" class="link">home</a></h3>
+
+        <div class="form-container">
+        <div class="title-container">
+            <h2><b>Suggest</b></h2>
+            <p>Please fill in the form to suggest an item</p>
+            <span id="empty-form" class="input-error"> </span>
+            <span id="item-success" style="color: gren; font-size: 20px;"> </span>
+          </div>
+
+    <form action="#"  id="suggest-form">
+            <div class="row clearfix">
+                <div class="col-12">
+                    <label>Item Name</label>
+                    <div class="input-field"> 
+                        <span><i aria-hidden="true" class="fa fa-file"></i></span>
+                        <input type="text" name="itemName" class="" id="item-name" placeholder="Item Name">
+                    </div>   
+                    <span id="item-name-error" class="input-error"> </span>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-12">
+                <label>Item Description</label>
+                    <textarea name="itemDescription" id="item-description" cols="30" rows="10"></textarea>
+                </div> 
+                <span id="item-description-error" class="input-error"> </span>   
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-12">
+                <label>Item Category</label>
+                <div class="input-field"> <span><i aria-hidden="true" class="fa fa-list"></i></span></div> 
+                    <select name="itemCategory" id="item-category">
+                        <option value="" selected>Choose</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="grocery">Grocery</option>
+                        <option value="furniture">Furniture</option>
+                    </select>
+                    <span id="item-category-error" class="input-error"> </span>   
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-12">
+                <label>Reason for suggesting item</label>
+                <textarea name="reason" id="reason-for-suggestion" cols="30" rows="10"></textarea>
+                </div> 
+                <span id="address-error" class="input-error"> </span>   
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-6">
+                   <img id="loader" style="display: none;" class="loader" src="ajax-loader.gif" alt="loading" width="20px" height="20px" >
+                    <input type="submit" value="Suggest" id="suggest-item" name="submit">
+                </div>
+            </div>
+    </form>        
+
+    <div class="form-footer">
+        <div class="text-center">
+            <h4>View all suggested items <span class="underline"><a href="suggestions.html">here</a></span></h4>
+        </div>
+    </div>
+
+    </div>
+</div>
+</body>
+<script>
+const authUser = JSON.parse((localStorage.getItem("currentLoggedIn")));
+if(!authUser){
+    window.location = `index.html?message=Access not allowed!`;
+}else{
+const alphabetRegExp = /^[a-zA-Z0-9]+$/;
+const alphabetChecker =  (input) =>  alphabetRegExp.test(input);
+
+const isValid = () => {
+    let item_name = document.getElementById("item-name").value;
+    let item_description = document.getElementById("item-description").value;
+    let item_category = document.getElementById("item-category").value;
+    let item_reason = document.getElementById("reason-for-suggestion").value;
+    const suggest_item = document.getElementById("suggest-item");
+
+    document.getElementById('empty-form').textContent="";
+
+    if(!alphabetChecker(item_name)) return false;
+    if(!alphabetChecker(item_description)) return false;
+    if(!alphabetChecker(item_category)) return false;
+    if(!alphabetChecker(item_reason)) return false;
+
+    suggest_item.disabled = false;
+    suggest_item.style.cursor="pointer";
+
+    return true;
+}
+    const postFormDataAsJson = async ({url, formData}) => {
+    const plainFormData = Object.fromEntries(formData.entries());
+    plainFormDataObject = {
+        itemName : plainFormData.itemName,
+        itemDescription: plainFormData.itemDescription,
+        itemCategory: plainFormData.itemCategory,
+        reason: plainFormData.reason
+    }
+    const formatDataAsJsonString = JSON.stringify(plainFormDataObject);
+    const fetchOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type" : "application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin" : "https://jsminnastore.herokuapp.com/suggested",
+            "Access-Control-Allow-Methods" : "OPTIONS, POST, GET",
+            Authorization: `access-token ${authUser.token}`
+        },
+        body: formatDataAsJsonString
+    };
+
+    const response = await fetch(url, fetchOptions);
+
+    if(response.ok == false){
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
+    }
+    return response.json();
+    }
+
+    const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const url = 'https://jsminnastore.herokuapp.com/suggest';
+    if(isValid()){
+    document.getElementById('suggest-item').style.display = "none";
+    document.getElementById('loader').style.display = "block";
+    try{
+        const formData = new FormData(form);   
+        const responseData = await postFormDataAsJson({url, formData});
+        if(responseData.success == true){
+            document.getElementById('item-succes').textContent=`${responseData.payload.message}`;
+        }
+    }catch(error){
+        document.getElementById('loader').style.display = "none";
+        document.getElementById('suggest-item').style.display = "block";
+        console.log(error);
+    }
+    }else{
+        document.getElementById('empty-form').textContent="Form cannot be empty";
+    }
+}
+  
+    const suggestForm = document.getElementById('suggest-form');
+    if(suggestForm){
+        suggestForm.addEventListener("submit", handleFormSubmit);
+    }
+    }
+</script>
+</html>
