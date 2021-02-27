@@ -19,6 +19,7 @@
         <div class="title-container">
             <h2><b>View Items by Category</b></h2>
             <p>Please pick one of the category to items under it</p>
+            <span id="empty-form" class="input-error"> </span>
             <span id="item-success" style="color: gren; font-size: 20px;"> </span>
           </div>
 
@@ -42,7 +43,7 @@
         <div class="container">
             <h1 style="text-align: center;">Categories Items</h1>
             <img id="loader" style="display: none;" class="loader" src="ajax-loader.gif" alt="loading" width="20px" height="20px" >
-            <ul class="unordered-list" id="categoryy-items">
+            <ul class="unordered-list" id="category-items">
             </ul>
         </div>
     </div>
@@ -82,6 +83,10 @@
 
             const renderCategoryItems = (data) => {
             const categoryItems = data.payload.result;
+            if(categoryItems == ''){
+                document.getElementById('loader').style.display = "none";
+                document.getElementById('empty-form').textContent="No items found in the category";
+            }
             for(const categoryItem of categoryItems){
                     const categoryUI = document.querySelector('#category-items');
                     const categoryLi = document.createElement('li');

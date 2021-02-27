@@ -58,9 +58,6 @@ const chkPasswordMatch = (input_id, error_name) => {
 const isValid = () => {
     let full_name = document.getElementById("full-name").value;
     let email = document.getElementById("email").value;
-    let phone = document.getElementById("phone").value;
-    let gender = document.getElementById("gender").value;
-    let address = document.getElementById("address").value;
     let pword = document.getElementById("pword").value;
     let cword = document.getElementById("cword").value;
     const sign_up = document.getElementById("sign-up");
@@ -157,12 +154,13 @@ const validateLogin = () => {
     let password = document.getElementById("pword-login").value;
     const login = document.getElementById("login");
     if(email == '' && password == ''){
-        sign_up.disabled = true;
-        sign_up.style.cursor="none";
+        login.disabled = true;
+        login.style.cursor="none";
         return false;
     }
-    sign_up.disabled = false;
-    sign_up.style.cursor="pointer";
+    login.disabled = false;
+    login.style.cursor="pointer";
+    return true;
 }
 
 const postLoginDataAsJson = async ({url, formData}) => {
@@ -201,7 +199,7 @@ const handleLoginSubmit = async (event) => {
     document.getElementById('login').style.display = "none";
     document.getElementById('loader').style.display = "block";
     try{
-        const formData = new FormData(form);   
+        const formData = new FormData(form); 
         const responseData = await postLoginDataAsJson({url, formData});
         if(responseData.success == true){
             localStorage.clear();
@@ -210,7 +208,7 @@ const handleLoginSubmit = async (event) => {
                     "token" : responseData.payload.token                            
                     };
             localStorage.setItem("currentLoggedIn", JSON.stringify(currentLoggedIn));
-            window.location = `index.html?message=${responseData.payload.message}`;
+            window.location = `index.html?message=Login Successful`;
         }
     }catch(error){
         document.getElementById('loader').style.display = "none";
@@ -223,9 +221,9 @@ const handleLoginSubmit = async (event) => {
 
 }
 
-const signInForm = document.getElementById('signin-form');
+const signInForm = document.getElementById('login-form');
 if(signInForm){
-    signUsignInFormpForm.addEventListener("submit", handleLoginSubmit);
+    signInForm.addEventListener("submit", handleLoginSubmit);
 }
 
 
@@ -245,6 +243,10 @@ if(authUser != null){
     document.getElementById('unauth-user').style.display="none";
     document.getElementById('auth-user-links').style.display="block";
 }else{
-    document.getElementById('unauth-user').style.display="block";
-    document.getElementById('auth-user-links').style.display="none";
+    const unauth = document.getElementById('unauth-user');
+    const auth = document.getElementById('auth-user-links');
+    if(unauth){
+        unauth.style.display="block";
+        auth.style.display="none"
+    }   
 }

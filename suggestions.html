@@ -43,7 +43,6 @@
             }
 
             const renderSuggestedItems = (data) => {
-                console.log(data);
                 const suggestedItems = data.payload.result;
                 for(const suggestedItem of suggestedItems){
                     const suggestionUI = document.querySelector('#suggest-list');

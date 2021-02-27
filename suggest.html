@@ -17,8 +17,8 @@
         <div class="title-container">
             <h2><b>Suggest</b></h2>
             <p>Please fill in the form to suggest an item</p>
-            <span id="empty-form" class="input-error"> </span>
-            <span id="item-success" style="color: gren; font-size: 20px;"> </span>
+            <span id="empty-form" class="input-error"> </span> <br>
+            <span id="item-success" style="color: green; font-size: 20px;"> </span>
           </div>
 
     <form action="#"  id="suggest-form">
@@ -89,13 +89,12 @@ const alphabetRegExp = /^[a-zA-Z0-9]+$/;
 const alphabetChecker =  (input) =>  alphabetRegExp.test(input);
 
 const isValid = () => {
+    document.getElementById('empty-form').textContent="";
     let item_name = document.getElementById("item-name").value;
     let item_description = document.getElementById("item-description").value;
     let item_category = document.getElementById("item-category").value;
     let item_reason = document.getElementById("reason-for-suggestion").value;
     const suggest_item = document.getElementById("suggest-item");
-
-    document.getElementById('empty-form').textContent="";
 
     if(!alphabetChecker(item_name)) return false;
     if(!alphabetChecker(item_description)) return false;
@@ -149,7 +148,9 @@ const isValid = () => {
         const formData = new FormData(form);   
         const responseData = await postFormDataAsJson({url, formData});
         if(responseData.success == true){
-            document.getElementById('item-succes').textContent=`${responseData.payload.message}`;
+            document.getElementById('item-success').textContent=`${responseData.payload.message}`;
+            document.getElementById('loader').style.display = "none";
+            document.getElementById('suggest-item').style.display = "block";
         }
     }catch(error){
         document.getElementById('loader').style.display = "none";
